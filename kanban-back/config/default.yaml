@@ -1,0 +1,15 @@
+server:
+  port: 3000
+db:
+  type: 'mysql'
+  host: 'localhost'
+  port: 3306
+  username: 'root'
+  password: '1234'
+  database: 'kanban'
+  synchronize: true
+  logging: true
+  mongoUri: ''
+jwt:
+  expiresIn: 360000000000
+  secret: 'secret'
