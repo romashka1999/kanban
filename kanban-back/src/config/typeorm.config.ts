@@ -12,7 +12,6 @@ export const typeormConfig: TypeOrmModuleOptions = {
     password: dbConfig.password,
     database: dbConfig.database,
     entities: [join(__dirname, '/../**/*.entity{.ts,.js}')],
-    // synchronize: dbConfig.synchronize,
-    // logging: dbConfig.logging,
-}
-
+    synchronize: dbConfig.synchronize,
+    logging: dbConfig.logging,
+};
