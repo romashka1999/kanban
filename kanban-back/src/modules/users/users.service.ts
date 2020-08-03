@@ -10,4 +10,8 @@ export class UsersService {
     public signUp(userSignUpDto: UserSignUpDto) {
         return this.userRepository.signUp(userSignUpDto);
     }
+
+    public async signIn(userSignUpDto: UserSignUpDto) {
+        const response = await this.signIn(userSignUpDto);
+    }
 }

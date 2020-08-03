@@ -3,11 +3,13 @@ import { Repository, EntityRepository } from 'typeorm';
 import { User } from './user.entity';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
 import { hashPassword } from 'src/utils/password.helper';
-import { ConflictException, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { UserSignInDto } from './dto/user-sign-in.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    public async signUp(userSignUpDto: UserSignUpDto): Promise<any> {
+
+    public async signUp(userSignUpDto: UserSignUpDto): Promise<User> {
         const { email, password } = userSignUpDto;
         const { salt, hashedPassword } = await hashPassword(password);
         const user = new User();
@@ -27,4 +29,20 @@ export class UserRepository extends Repository<User> {
             }
         }
     }
+
+
+    public async signIn(userSignInDto: UserSignInDto): Promise<User> {
+        const { email, password } = userSignInDto;
+        try {
+            const user = await this.findOne({ email });
+            if(user && user.validatePassword(password)) {
+                return user;
+            } else {
+                throw new BadRequestException('INVALID_CREDENTIALS')
+            }
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+    
 }
