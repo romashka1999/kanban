@@ -17,14 +17,13 @@ export class User extends BaseEntity {
     @Column({
         type: 'varchar',
         nullable: false,
-        select: false,
     })
     password: string;
 
     @Column({
         type: 'varchar',
         nullable: false,
-        select: false,
+        select: true,
     })
     salt: string;
 

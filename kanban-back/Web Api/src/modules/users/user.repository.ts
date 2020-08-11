@@ -29,20 +29,5 @@ export class UserRepository extends Repository<User> {
             }
         }
     }
-
-
-    public async signIn(userSignInDto: UserSignInDto): Promise<User> {
-        const { email, password } = userSignInDto;
-        try {
-            const user = await this.findOne({ email });
-            if(user && user.validatePassword(password)) {
-                return user;
-            } else {
-                throw new BadRequestException('INVALID_CREDENTIALS')
-            }
-        } catch (error) {
-            throw new InternalServerErrorException(error);
-        }
-    }
     
 }
