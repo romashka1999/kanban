@@ -21,7 +21,7 @@ export class AuthController {
         @Req() req: Request, 
         @Body(ValidationPipe) userSignInDto: UserSignInDto) {
         const response = this.authService.signInUser(req.user as User);
-        return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
+        return new ResponseCreator(HttpStatus.OK, true, req.url, req.method, response);
     }
 
 

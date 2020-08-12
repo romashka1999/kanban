@@ -2,15 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
-import * as config from 'config';
 import { AppModule } from './app.module';
 
+
 async function bootstrap() {
-    const serverConfig = config.get('server');
-    const PORT = serverConfig.port;
 
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+    const configService = app.get(ConfigService);
+    const PORT = configService.get('SERVER_PORT');
 
     const swaggerConfig = new DocumentBuilder()
         .setTitle('Kankban API')
