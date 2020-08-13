@@ -1,0 +1,25 @@
+.board-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 5px;
+    .stage-container {
+        width: 20%;
+        border: black solid 2px;
+        padding: 5px;
+        text-align: center;
+    }
+    .stage-header {
+        text-transform: uppercase;
+        color: red($color: #b36969);
+        text-decoration: underline;
+        padding: 10px;
+    }
+    .stage-task {
+        cursor: pointer;
+        width: 100%;
+        background-color: grey;
+        color: khaki;
+        margin-bottom: 10px;
+    }
+}

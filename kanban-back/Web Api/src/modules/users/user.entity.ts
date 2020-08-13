@@ -1,6 +1,7 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { validatePassword } from 'src/utils/password.helper';
+import { Task } from '../tasks/task.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -26,6 +27,10 @@ export class User extends BaseEntity {
         select: true,
     })
     salt: string;
+
+
+    @OneToMany(type => Task, task => task.user)
+    tasks: Task[]
 
     async validatePassword(password: string): Promise<boolean> {
         return await validatePassword(password, this);

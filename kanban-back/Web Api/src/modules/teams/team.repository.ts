@@ -1,9 +1,9 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 
-import { Task } from './task.entity';
+import { Team } from './team.entity';
 
-@EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {
+@EntityRepository(Team)
+export class TeamRepository extends Repository<Team> {
     
 }

@@ -1,10 +1,10 @@
 import { Repository, EntityRepository } from 'typeorm';
+import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 
 import { User } from './user.entity';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
 import { hashPassword } from 'src/utils/password.helper';
-import { ConflictException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
-import { UserSignInDto } from './dto/user-sign-in.dto';
+
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
