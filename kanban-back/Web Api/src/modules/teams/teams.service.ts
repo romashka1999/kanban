@@ -7,7 +7,6 @@ import { Team } from './team.entity';
 
 @Injectable()
 export class TeamsService {
-
     constructor(@InjectRepository(TeamRepository) private readonly teamRepository: TeamRepository) {}
 
     // public async create(taskCreateDto: TaskCreateDto): Promise<Task> {
@@ -17,6 +16,6 @@ export class TeamsService {
     //         return createdTask;
     //     } catch (error) {
     //         throw new InternalServerErrorException(error);
-    //     }   
+    //     }
     // }
 }

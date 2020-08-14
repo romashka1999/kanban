@@ -7,13 +7,11 @@ import { User } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly usersService: UsersService,
-        private readonly jwtService: JwtService) {}
+    constructor(private readonly usersService: UsersService, private readonly jwtService: JwtService) {}
 
     public async validateUser(email: string, password: string) {
         const user = await this.usersService.findOneByEmail(email);
-        if(user && await user.validatePassword(password)) {
+        if (user && (await user.validatePassword(password))) {
             const { password, salt, ...result } = user;
             return result;
         }
@@ -24,11 +22,10 @@ export class AuthService {
         return await this.usersService.signUp(userSignUpDto);
     }
 
-    public signInUser(user: User): {access_token: string} {
+    public signInUser(user: User): { access_token: string } {
         const payload = { email: user.email, sub: user.id };
         return {
-            access_token: this.jwtService.sign(payload) 
-        }
+            access_token: this.jwtService.sign(payload),
+        };
     }
-
 }

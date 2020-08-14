@@ -1,7 +1,7 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 
 import { User } from '../users/user.entity';
-
+import { Sprint } from '../sprints/sprint.entity';
 
 @Entity('teams')
 export class Team extends BaseEntity {
@@ -21,11 +21,14 @@ export class Team extends BaseEntity {
     })
     comment: string;
 
-    @ManyToMany(type => User, {onDelete: 'CASCADE'})
+    @ManyToMany((type) => User, { onDelete: 'CASCADE' })
     @JoinTable()
     users: User[];
 
-    @OneToOne(type => User)
+    @OneToOne((type) => User)
     @JoinColumn()
     author: User;
+
+    @OneToMany((type) => Sprint, (sprint) => sprint.team)
+    sprints: Sprint[];
 }

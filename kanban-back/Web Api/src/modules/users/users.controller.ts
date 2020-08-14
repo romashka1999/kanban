@@ -12,5 +12,4 @@ import { LocalAuthGuard } from '../auth/guard/local-auth.guard';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
-
 }

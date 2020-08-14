@@ -9,12 +9,11 @@ import { UsersModule } from './modules/users/users.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { GlobalExceptionFilter } from './shared/global-exception.filter';
 
-
 @Module({
     imports: [
         ConfigModule.forRoot({
             expandVariables: true,
-            isGlobal: true
+            isGlobal: true,
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -29,11 +28,11 @@ import { GlobalExceptionFilter } from './shared/global-exception.filter';
                 entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
                 synchronize: !!configService.get<string>('DB_SYNCHRONIZE'),
                 logging: !!configService.get<string>('DB_LOGGING'),
-            })  
-        }), 
+            }),
+        }),
         AuthModule,
-        UsersModule, 
-        TasksModule
+        UsersModule,
+        TasksModule,
     ],
     controllers: [],
     providers: [

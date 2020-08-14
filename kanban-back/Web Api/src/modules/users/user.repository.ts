@@ -5,10 +5,8 @@ import { User } from './user.entity';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
 import { hashPassword } from 'src/utils/password.helper';
 
-
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-
     public async signUp(userSignUpDto: UserSignUpDto): Promise<User> {
         const { email, password } = userSignUpDto;
         const { salt, hashedPassword } = await hashPassword(password);
@@ -29,5 +27,4 @@ export class UserRepository extends Repository<User> {
             }
         }
     }
-    
 }

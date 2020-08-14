@@ -1,6 +1,7 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
 
 import { User } from '../users/user.entity';
+import { Sprint } from '../sprints/sprint.entity';
 
 export enum TaskStatus {
     READY = 'READY',
@@ -9,7 +10,6 @@ export enum TaskStatus {
     DONE = 'DONE',
 }
 
-
 @Entity('tasks')
 export class Task extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -17,8 +17,7 @@ export class Task extends BaseEntity {
 
     @Column({
         type: 'varchar',
-        unique: true,
-        length: 255,
+        nullable: false,
     })
     title: string;
 
@@ -28,14 +27,34 @@ export class Task extends BaseEntity {
     })
     description: string;
 
-
     @Column({
         type: 'varchar',
         nullable: false,
-        default: TaskStatus.READY
+        default: TaskStatus.READY,
     })
     status: TaskStatus;
 
-    @ManyToOne(type => User, user => user.tasks)
-    user: User;
+    @ManyToOne((type) => User, (user) => user.createdTasks)
+    author: User;
+
+    @RelationId((task: Task) => task.author)
+    authorId: number;
+
+    @ManyToOne((type) => User, (user) => user.tasksWhichYouAssignToOther)
+    assigner: User;
+
+    @RelationId((task: Task) => task.assigner)
+    assignerId: number;
+
+    @ManyToOne((type) => User, (user) => user.tasksWhichAreAssignedToYou)
+    assignee: User;
+
+    @RelationId((task: Task) => task.assignee)
+    assigneeId: number;
+
+    @ManyToOne((type) => Sprint, (sprint) => sprint.tasks)
+    sprint: Sprint;
+
+    @RelationId((task: Task) => task.sprint)
+    sprintId: number;
 }

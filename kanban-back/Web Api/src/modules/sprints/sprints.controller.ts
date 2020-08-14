@@ -15,9 +15,8 @@ import { SprintsSevrice } from './sprints.service';
 @UseGuards(JwtAuthGuard)
 @Controller('sprints')
 export class SprintsController {
-
     constructor(private readonly sprintsSevrice: SprintsSevrice) {}
-    
+
     // @Post()
     // public async create(
     //     @Req() req: Request,

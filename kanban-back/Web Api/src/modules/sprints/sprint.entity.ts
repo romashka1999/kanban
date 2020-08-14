@@ -1,8 +1,8 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany, ManyToOne, RelationId } from 'typeorm';
 
 import { User } from '../users/user.entity';
-
-
+import { Task } from '../tasks/task.entity';
+import { Team } from '../teams/team.entity';
 
 @Entity('sprints')
 export class Sprint extends BaseEntity {
@@ -12,7 +12,7 @@ export class Sprint extends BaseEntity {
     @Column({
         type: 'timestamp',
         nullable: false,
-        default: () => 'CURRENT_TIMESTAMP'
+        default: () => 'CURRENT_TIMESTAMP',
     })
     startDate: Date;
 
@@ -22,7 +22,16 @@ export class Sprint extends BaseEntity {
     // })
     // ednDate: Date;
 
-    @OneToOne(type => User)
+    @OneToOne((type) => User)
     @JoinColumn()
     author: User;
+
+    @OneToMany((type) => Task, (task) => task.sprint)
+    createdTasks: Task[];
+
+    @ManyToOne((type) => Team, (team) => team.sprints)
+    team: Team;
+
+    @RelationId((sprint: Sprint) => sprint.team)
+    teamId: number;
 }

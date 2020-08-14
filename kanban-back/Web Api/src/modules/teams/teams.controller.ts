@@ -15,9 +15,8 @@ import { TeamsService } from './teams.service';
 @UseGuards(JwtAuthGuard)
 @Controller('tasks')
 export class TeamsController {
-
     constructor(private readonly teamsService: TeamsService) {}
-    
+
     // @Post()
     // public async create(
     //     @Req() req: Request,

@@ -6,19 +6,13 @@ import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
 
-
 async function bootstrap() {
-
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     const configService = app.get(ConfigService);
     const PORT = configService.get('SERVER_PORT');
 
-    const swaggerConfig = new DocumentBuilder()
-        .setTitle('Kankban API')
-        .setDescription('Task Management system')
-        .setVersion('1.0.0')
-        .build();
+    const swaggerConfig = new DocumentBuilder().setTitle('Kankban API').setDescription('Task Management system').setVersion('1.0.0').build();
 
     const document = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api', app, document);

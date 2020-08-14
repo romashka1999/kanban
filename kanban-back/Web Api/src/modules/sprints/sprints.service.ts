@@ -7,7 +7,6 @@ import { Sprint } from './sprint.entity';
 
 @Injectable()
 export class SprintsSevrice {
-
     constructor(@InjectRepository(SprintRepository) private readonly sprintRepository: SprintRepository) {}
 
     // public async create(taskCreateDto: TaskCreateDto): Promise<Task> {
@@ -17,6 +16,6 @@ export class SprintsSevrice {
     //         return createdTask;
     //     } catch (error) {
     //         throw new InternalServerErrorException(error);
-    //     }   
+    //     }
     // }
 }

@@ -28,9 +28,14 @@ export class User extends BaseEntity {
     })
     salt: string;
 
+    @OneToMany((type) => Task, (task) => task.author)
+    createdTasks: Task[];
 
-    @OneToMany(type => Task, task => task.user)
-    tasks: Task[]
+    @OneToMany((type) => Task, (task) => task.assigner)
+    tasksWhichYouAssignToOther: Task[];
+
+    @OneToMany((type) => Task, (task) => task.assignee)
+    tasksWhichAreAssignedToYou: Task[];
 
     async validatePassword(password: string): Promise<boolean> {
         return await validatePassword(password, this);
