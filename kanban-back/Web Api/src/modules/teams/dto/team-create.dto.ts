@@ -5,18 +5,18 @@ export class TeamCreateDto {
     @ApiProperty({
         type: String,
         required: true,
-        description: 'title for task',
+        description: 'name for Team',
     })
     @IsNotEmpty()
     @IsString()
-    title: string;
+    name: string;
 
     @ApiProperty({
         type: String,
         required: true,
-        description: 'description for task',
+        description: 'comment for Team',
     })
     @IsNotEmpty()
     @IsString()
-    description: string;
+    comment: string;
 }

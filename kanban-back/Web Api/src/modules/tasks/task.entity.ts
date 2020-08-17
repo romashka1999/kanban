@@ -10,7 +10,7 @@ export enum TaskStatus {
     DONE = 'DONE',
 }
 
-@Entity('tasks')
+@Entity()
 export class Task extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

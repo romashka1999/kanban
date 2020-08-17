@@ -9,5 +9,6 @@ import { TeamRepository } from './team.repository';
     imports: [TypeOrmModule.forFeature([TeamRepository])],
     controllers: [TeamsController],
     providers: [TeamsService],
+    exports: [TeamsService]
 })
 export class TeamsModule {}

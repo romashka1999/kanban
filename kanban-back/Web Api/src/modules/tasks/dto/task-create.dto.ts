@@ -27,5 +27,6 @@ export class TaskCreateDto {
     })
     @IsOptional()
     @IsNumber()
+    @NotEquals(0)
     asigneeId: number;
 }

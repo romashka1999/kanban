@@ -17,13 +17,13 @@ export class TasksService {
     public async create(loggedUser: User, taskCreateDto: TaskCreateDto): Promise<Task> {
         const { title, description, asigneeId } = taskCreateDto;
         let assignee: User | null = null;
-        if (!isNull(asigneeId)) {
-            assignee = await this.usersService.findOneById(asigneeId);
-            if (!assignee) {
-                throw new NotFoundException('ASIGNEE_DOES_NOT_EXIST');
-            }
-        }
         try {
+            if (asigneeId) {
+                assignee = await this.usersService.findOneById(asigneeId);
+                if (!assignee) {
+                    throw new NotFoundException('ASIGNEE_DOES_NOT_EXIST');
+                }
+            }
             const createdTask = await this.taskRepository.createTask(loggedUser, title, description, assignee);
             return createdTask;
         } catch (error) {

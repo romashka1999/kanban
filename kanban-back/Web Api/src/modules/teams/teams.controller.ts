@@ -6,22 +6,25 @@ import { JwtAuthGuard } from '../auth/guard/jwt-aut.guard';
 import { TeamCreateDto } from './dto/team-create.dto';
 import { ResponseCreator } from 'src/shared/response-creator.class';
 import { TeamsService } from './teams.service';
+import { GetUser } from '../auth/decorator/get-user.decorator';
+import { User } from '../users/user.entity';
 
 @ApiHeader({
     name: 'token',
     description: 'token for Auth',
 })
-@ApiTags('tasks')
+@ApiTags('teams')
 @UseGuards(JwtAuthGuard)
-@Controller('tasks')
+@Controller('teams')
 export class TeamsController {
     constructor(private readonly teamsService: TeamsService) {}
 
-    // @Post()
-    // public async create(
-    //     @Req() req: Request,
-    //     @Body(ValidationPipe) taskCreateDto: TaskCreateDto) {
-    //     const response = await this.tasksService.create(taskCreateDto);
-    //     return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
-    // }
+    @Post()
+    public async create(
+        @Req() req: Request,
+        @GetUser() user: User,
+        @Body(ValidationPipe) teamCreateDto: TeamCreateDto) {
+        const response = await this.teamsService.create(user, teamCreateDto);
+        return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
+    }
 }

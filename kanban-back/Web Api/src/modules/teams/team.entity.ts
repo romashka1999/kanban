@@ -3,7 +3,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMa
 import { User } from '../users/user.entity';
 import { Sprint } from '../sprints/sprint.entity';
 
-@Entity('teams')
+@Entity()
 export class Team extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -25,7 +25,7 @@ export class Team extends BaseEntity {
     @JoinTable()
     users: User[];
 
-    @OneToOne((type) => User)
+    @OneToOne((type) => User, { nullable: false })
     @JoinColumn()
     author: User;
 

@@ -3,7 +3,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 't
 import { validatePassword } from 'src/utils/password.helper';
 import { Task } from '../tasks/task.entity';
 
-@Entity('users')
+@Entity()
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

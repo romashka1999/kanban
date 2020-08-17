@@ -1,22 +1,31 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsDate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SprintCreateDto {
     @ApiProperty({
-        type: String,
+        type: Date,
         required: true,
-        description: 'title for task',
+        description: 'startDate for Sprint',
     })
     @IsNotEmpty()
-    @IsString()
-    title: string;
+    @IsDate()
+    startDate: Date;
 
     @ApiProperty({
-        type: String,
+        type: Date,
         required: true,
-        description: 'description for task',
+        description: 'endDate for Sprint',
     })
     @IsNotEmpty()
-    @IsString()
-    description: string;
+    @IsDate()
+    endDate: Date;
+
+    @ApiProperty({
+        type: Number,
+        required: true,
+        description: 'teamId for Sprint',
+    })
+    @IsNotEmpty()
+    @IsNumber()
+    teamId: number;
 }

@@ -8,6 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { GlobalExceptionFilter } from './shared/global-exception.filter';
+import { SprintsModule } from './modules/sprints/sprints.module';
+import { TeamsModule } from './modules/teams/teams.module';
 
 @Module({
     imports: [
@@ -33,6 +35,8 @@ import { GlobalExceptionFilter } from './shared/global-exception.filter';
         AuthModule,
         UsersModule,
         TasksModule,
+        SprintsModule,
+        TeamsModule
     ],
     controllers: [],
     providers: [
