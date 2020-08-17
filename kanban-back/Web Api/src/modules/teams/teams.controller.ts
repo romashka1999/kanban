@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards, Post, ValidationPipe, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Post, ValidationPipe, Body, HttpStatus, Param } from '@nestjs/common';
 import { ApiTags, ApiHeader } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -26,5 +26,14 @@ export class TeamsController {
         @Body(ValidationPipe) teamCreateDto: TeamCreateDto) {
         const response = await this.teamsService.create(user, teamCreateDto);
         return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
+    }
+
+    @Get(':id')
+    public async getOneTeam(
+        @Req() req: Request,
+        @GetUser() user: User,
+        @Param('id', ValidationPipe) id: number) {
+        const response = await this.teamsService.getOneTeam(user, id);
+        return new ResponseCreator(HttpStatus.OK, true, req.url, req.method, response);
     }
 }

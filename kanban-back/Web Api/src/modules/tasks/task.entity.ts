@@ -34,6 +34,12 @@ export class Task extends BaseEntity {
     })
     status: TaskStatus;
 
+    @Column({
+        type: 'bool',
+        default: false,
+    })
+    archived: boolean;
+
     @ManyToOne((type) => User, (user) => user.createdTasks)
     author: User;
 

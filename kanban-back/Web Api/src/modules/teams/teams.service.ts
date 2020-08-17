@@ -28,4 +28,16 @@ export class TeamsService {
             throw new InternalServerErrorException(error);
         }
     }
+
+    public async getOneTeam(loggedUser: User, id: number): Promise<Team> {
+        try {
+            const team = await this.teamRepository.createQueryBuilder('team')
+                .where('team.id == id AND user.authorId === userId', { id, userId: loggedUser.id })
+                .leftJoinAndSelect('team.users', 'users')
+                .getOne();
+            return team;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

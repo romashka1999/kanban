@@ -27,4 +27,21 @@ export class SprintsSevrice {
             throw new InternalServerErrorException(error);
         }
     }
+
+    public async getOneById(loggedUser: User, sprintId: number): Promise<Sprint> {
+        try {
+            const sprint = await this.sprintRepository.findOne({
+                where: {
+                    id: sprintId
+                },
+                relations: ['tasks']
+            });
+            return sprint;
+        } catch (error) {
+            if(error instanceof HttpException) {
+                throw error;
+            }
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

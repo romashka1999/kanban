@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards, Post, ValidationPipe, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Post, ValidationPipe, Body, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiHeader } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -25,6 +25,16 @@ export class SprintsController {
         @GetUser() user: User,
         @Body(ValidationPipe) sprintCreateDto: SprintCreateDto) {
         const response = await this.sprintsSevrice.create(user, sprintCreateDto);
+        return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
+    }
+
+
+    @Get(':id')
+    public async getOneById(
+        @Req() req: Request,
+        @GetUser() user: User,
+        @Param('id', ParseIntPipe) sprintId: number) {
+        const response = await this.sprintsSevrice.getOneById(user, sprintId);
         return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
     }
 }
