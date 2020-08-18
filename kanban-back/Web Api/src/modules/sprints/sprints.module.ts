@@ -11,5 +11,6 @@ import { TeamsModule } from '../teams/teams.module';
     imports: [TypeOrmModule.forFeature([SprintRepository]), TeamsModule],
     controllers: [SprintsController],
     providers: [SprintsSevrice],
+    exports: [SprintsSevrice]
 })
 export class SprintsModule {}

@@ -13,8 +13,9 @@ export class TeamsService {
     public async create(loggedUser: User, teamCreateDto: TeamCreateDto): Promise<Team> {
         const { name, comment } = teamCreateDto;
         try {
-            const createdTask = await this.teamRepository.create({ name, comment, author: loggedUser }).save();
-            return createdTask;
+            const createdTeam = await this.teamRepository.create({ name, comment, admin: loggedUser }).save();
+            delete createdTeam.admin;
+            return createdTeam;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
@@ -31,9 +32,22 @@ export class TeamsService {
 
     public async getOneTeam(loggedUser: User, id: number): Promise<Team> {
         try {
-            const team = await this.teamRepository.createQueryBuilder('team')
+            const team = await this.teamRepository
+                .createQueryBuilder('team')
                 .where('team.id == id AND user.authorId === userId', { id, userId: loggedUser.id })
                 .leftJoinAndSelect('team.users', 'users')
+                .getOne();
+            return team;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    public async getTeamByAdminId(userId: number): Promise<Team> {
+        try {
+            const team = await this.teamRepository
+                .createQueryBuilder('team')
+                .where('team.adminId = userId', { userId })
                 .getOne();
             return team;
         } catch (error) {

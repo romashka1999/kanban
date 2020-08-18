@@ -29,4 +29,14 @@ export class TaskCreateDto {
     @IsNumber()
     @NotEquals(0)
     asigneeId: number;
+
+    @ApiProperty({
+        type: Number,
+        required: false,
+        description: 'sprintId for task',
+    })
+    @IsNotEmpty()
+    @IsNumber()
+    @NotEquals(0)
+    sprintId: number;
 }

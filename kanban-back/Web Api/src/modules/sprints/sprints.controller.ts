@@ -34,7 +34,7 @@ export class SprintsController {
         @Req() req: Request,
         @GetUser() user: User,
         @Param('id', ParseIntPipe) sprintId: number) {
-        const response = await this.sprintsSevrice.getOneById(user, sprintId);
+        const response = await this.sprintsSevrice.getOneByIdWithTasks(user, sprintId);
         return new ResponseCreator(HttpStatus.CREATED, true, req.url, req.method, response);
     }
 }

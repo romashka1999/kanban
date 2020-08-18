@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId, CreateDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
 import { User } from '../users/user.entity';
 import { Sprint } from '../sprints/sprint.entity';
@@ -28,9 +28,9 @@ export class Task extends BaseEntity {
     description: string;
 
     @Column({
-        type: 'varchar',
-        nullable: false,
-        default: TaskStatus.READY,
+        type: 'enum',
+        enum: [TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.DONE, TaskStatus.TESTING],
+        default: TaskStatus.READY
     })
     status: TaskStatus;
 
@@ -39,6 +39,15 @@ export class Task extends BaseEntity {
         default: false,
     })
     archived: boolean;
+
+    @CreateDateColumn()
+    createDate: Date;
+
+    @UpdateDateColumn()
+    updateDate: Date;
+
+    @VersionColumn()
+    version: number;
 
     @ManyToOne((type) => User, (user) => user.createdTasks)
     author: User;
@@ -58,7 +67,7 @@ export class Task extends BaseEntity {
     @RelationId((task: Task) => task.assignee)
     assigneeId: number;
 
-    @ManyToOne((type) => Sprint, (sprint) => sprint.tasks)
+    @ManyToOne((type) => Sprint, (sprint) => sprint.tasks, { nullable: false })
     sprint: Sprint;
 
     @RelationId((task: Task) => task.sprint)

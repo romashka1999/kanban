@@ -25,6 +25,9 @@ export class Sprint extends BaseEntity {
     @JoinColumn()
     author: User;
 
+    @RelationId((sprint: Sprint) => sprint.author)
+    authorId: number;
+
     @OneToMany((type) => Task, (task) => task.sprint)
     tasks: Task[];
 

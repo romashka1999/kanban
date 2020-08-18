@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException, HttpException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { isNull } from 'util';
+import { UpdateResult, FindManyOptions } from 'typeorm';
 
 import { TaskRepository } from './task.repository';
 import { TaskCreateDto } from './dto/task-create.dto';
@@ -9,17 +9,33 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 import { pagination } from 'src/shared/pagination';
 import { StrictPaginationGetFilterDto } from 'src/shared/dtos/strict-pagination-get-filter.dto';
-import { UpdateResult } from 'typeorm';
 import { TaskStatusUpdateDto } from './dto/task-status-update.dto';
+import { SprintsSevrice } from '../sprints/sprints.service';
+import { TeamsService } from '../teams/teams.service';
 
 @Injectable()
 export class TasksService {
-    constructor(@InjectRepository(TaskRepository) private readonly taskRepository: TaskRepository, private readonly usersService: UsersService) {}
+    constructor(
+        @InjectRepository(TaskRepository) private readonly taskRepository: TaskRepository, 
+        private readonly usersService: UsersService,
+        private readonly sprintsSevrice: SprintsSevrice,
+        private readonly teamsService: TeamsService) {}
 
     public async create(loggedUser: User, taskCreateDto: TaskCreateDto): Promise<Task> {
-        const { title, description, asigneeId } = taskCreateDto;
+        const { title, description, asigneeId, sprintId } = taskCreateDto;
         let assignee: User | null = null;
         try {
+            const user = await this.usersService.getUserWithTeams(loggedUser.id);
+            const teamIds = user.teams.map((team) => {
+                return team.id
+            })
+            if(teamIds.length === 0) {
+                throw new NotFoundException('USER_IS_NOT_IN_ANY_TEAM');
+            }
+            const sprint = await this.sprintsSevrice.getOneForTaskCreate(sprintId, teamIds);
+            if (!sprint) {
+                throw new NotFoundException('SPRINT_DOES_NOT_EXIST');
+            }
             if (asigneeId) {
                 assignee = await this.usersService.findOneById(asigneeId);
                 if (!assignee) {
@@ -37,23 +53,47 @@ export class TasksService {
     }
 
     public async getAssignedTasksToOther(loggedUser: User, strictPaginationGetFilterDto: StrictPaginationGetFilterDto): Promise<Task[]> {
-        return await this.getPaginatedTasksWithWhereParams(loggedUser.id, strictPaginationGetFilterDto, { assignerId: loggedUser.id });
+        const params: FindManyOptions<Task> = {
+            where: {
+                assigner: loggedUser,
+            },
+            order: {
+                createDate: 'DESC'
+            }
+        }
+        return await this.getPaginatedTasksWithWhereParams(loggedUser.id, strictPaginationGetFilterDto, params);
     }
 
     public async getAssignedTasksToMe(loggedUser: User, strictPaginationGetFilterDto: StrictPaginationGetFilterDto): Promise<Task[]> {
-        return await this.getPaginatedTasksWithWhereParams(loggedUser.id, strictPaginationGetFilterDto, { assigneeId: loggedUser.id });
+        const params: FindManyOptions<Task> = {
+            where: {
+                assignee: loggedUser,
+            },
+            order: {
+                createDate: 'DESC'
+            }
+        }
+        return await this.getPaginatedTasksWithWhereParams(loggedUser.id, strictPaginationGetFilterDto, params);
     }
 
     public async getTasksWhichICreated(loggedUser: User, strictPaginationGetFilterDto: StrictPaginationGetFilterDto): Promise<Task[]> {
-        return await this.getPaginatedTasksWithWhereParams(loggedUser.id, strictPaginationGetFilterDto, { authorId: loggedUser.id });
+        const params: FindManyOptions<Task> = {
+            where: {
+                author: loggedUser,
+            },
+            order: {
+                createDate: 'DESC'
+            }
+        }
+        return await this.getPaginatedTasksWithWhereParams(loggedUser.id, strictPaginationGetFilterDto, params);
     }
 
-    private async getPaginatedTasksWithWhereParams(id: number, strictPaginationGetFilterDto: StrictPaginationGetFilterDto, where: any): Promise<Task[]> {
+    private async getPaginatedTasksWithWhereParams(id: number, strictPaginationGetFilterDto: StrictPaginationGetFilterDto, params: FindManyOptions<Task>): Promise<Task[]> {
         const { page, pageSize } = strictPaginationGetFilterDto;
         const { offset, limit } = pagination(page, pageSize);
         try {
             return await this.taskRepository.find({
-                where,
+                ...params,
                 skip: offset,
                 take: limit,
             });

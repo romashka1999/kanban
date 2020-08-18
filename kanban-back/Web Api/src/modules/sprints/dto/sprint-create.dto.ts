@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsDate } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsDate, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SprintCreateDto {
@@ -8,8 +8,8 @@ export class SprintCreateDto {
         description: 'startDate for Sprint',
     })
     @IsNotEmpty()
-    @IsDate()
-    startDate: Date;
+    @IsDateString()
+    startDate: string;
 
     @ApiProperty({
         type: Date,
@@ -17,8 +17,8 @@ export class SprintCreateDto {
         description: 'endDate for Sprint',
     })
     @IsNotEmpty()
-    @IsDate()
-    endDate: Date;
+    @IsDateString()
+    endDate: string;
 
     @ApiProperty({
         type: Number,

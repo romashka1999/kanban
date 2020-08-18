@@ -1,7 +1,8 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, DeleteDateColumn, ManyToMany, JoinTable } from 'typeorm';
 
 import { validatePassword } from 'src/utils/password.helper';
 import { Task } from '../tasks/task.entity';
+import { Team } from '../teams/team.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -28,6 +29,9 @@ export class User extends BaseEntity {
     })
     salt: string;
 
+    @DeleteDateColumn()
+    deletedAt: Date;
+
     @OneToMany((type) => Task, (task) => task.author)
     createdTasks: Task[];
 
@@ -36,6 +40,13 @@ export class User extends BaseEntity {
 
     @OneToMany((type) => Task, (task) => task.assignee)
     tasksWhichAreAssignedToYou: Task[];
+
+    @OneToOne((type) => Team, { nullable: false })
+    team: Team;
+
+    @ManyToMany((type) => Team, { onDelete: 'CASCADE'})
+    @JoinTable()
+    teams: Team[];
 
     async validatePassword(password: string): Promise<boolean> {
         return await validatePassword(password, this);

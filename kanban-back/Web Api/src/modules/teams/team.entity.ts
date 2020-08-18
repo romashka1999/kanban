@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToMany, OneToOne, JoinColumn, OneToMany, RelationId } from 'typeorm';
 
 import { User } from '../users/user.entity';
 import { Sprint } from '../sprints/sprint.entity';
@@ -21,13 +21,15 @@ export class Team extends BaseEntity {
     })
     comment: string;
 
-    @ManyToMany((type) => User, { onDelete: 'CASCADE' })
-    @JoinTable()
+    @ManyToMany((type) => User, { onDelete: 'CASCADE'})
     users: User[];
 
     @OneToOne((type) => User, { nullable: false })
     @JoinColumn()
-    author: User;
+    admin: User;
+
+    @RelationId((team: Team) => team.admin)
+    adminId: number;
 
     @OneToMany((type) => Sprint, (sprint) => sprint.team)
     sprints: Sprint[];
