@@ -8,6 +8,9 @@ import { User } from './user.entity';
 import { UserAddToTeam } from './dto/user-add-to-team.dto';
 import { TeamsService } from '../teams/teams.service';
 import { Team } from '../teams/team.entity';
+import { StrictPaginationGetFilterDto } from 'src/shared/dtos/strict-pagination-get-filter.dto';
+import { pagination } from 'src/shared/pagination';
+import { of } from 'rxjs';
 
 @Injectable()
 export class UsersService {
@@ -70,7 +73,7 @@ export class UsersService {
         try {
             const team = await this.teamsService.getTeamByAdminId(loggedUser.id);
             if(!team) {
-                throw new BadRequestException('YOU_ARE_ANY_TEAM');
+                throw new BadRequestException('YOU_ARE_NOT_ANY_TEAM');
             }
 
             if(teamId !== team.id) {
@@ -93,4 +96,5 @@ export class UsersService {
             throw new InternalServerErrorException(error);
         }
     }
+
 }

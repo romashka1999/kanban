@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards, Post, ValidationPipe, Body, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Post, ValidationPipe, Body, HttpStatus, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiTags, ApiHeader } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -8,6 +8,7 @@ import { ResponseCreator } from 'src/shared/response-creator.class';
 import { TeamsService } from './teams.service';
 import { GetUser } from '../auth/decorator/get-user.decorator';
 import { User } from '../users/user.entity';
+import { StrictPaginationGetFilterDto } from 'src/shared/dtos/strict-pagination-get-filter.dto';
 
 @ApiHeader({
     name: 'token',
@@ -34,6 +35,16 @@ export class TeamsController {
         @GetUser() user: User,
         @Param('id', ValidationPipe) id: number) {
         const response = await this.teamsService.getOneTeam(user, id);
+        return new ResponseCreator(HttpStatus.OK, true, req.url, req.method, response);
+    }
+
+    @Get('getUsersByTeamId/:teamId')
+    public async getUsersByTeamId(
+        @Req() req: Request,
+        @GetUser() user: User,
+        @Param(ParseIntPipe) teamId: number,
+        @Query(ValidationPipe) strictPaginationGetFilterDto: StrictPaginationGetFilterDto) {
+        const response = await this.teamsService.getUsersByTeamId(user, teamId, strictPaginationGetFilterDto);
         return new ResponseCreator(HttpStatus.OK, true, req.url, req.method, response);
     }
 }

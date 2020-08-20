@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToMany, OneToOne, JoinColumn, OneToMany, RelationId } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToMany, OneToOne, JoinColumn, OneToMany, RelationId, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from '../users/user.entity';
 import { Sprint } from '../sprints/sprint.entity';
@@ -20,6 +20,12 @@ export class Team extends BaseEntity {
         nullable: false,
     })
     comment: string;
+
+    @CreateDateColumn()
+    createDate: Date;
+
+    @UpdateDateColumn()
+    updateDate: Date;
 
     @ManyToMany((type) => User, { onDelete: 'CASCADE'})
     users: User[];
